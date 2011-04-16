@@ -9,7 +9,7 @@
 	<property name="test-dist" location="test-dist" />
 	<property name="filename-min" value="imagefader.min.js" />
 	<property name="jquery-filename" value="jquery-1.5.1.min.js" />
-	<property name="VERSION" value="0.1" />
+	<property name="VERSION" value="0.9" />
 	<property name="files_list" value="fader.js" />
 	
 	<target name="init">
