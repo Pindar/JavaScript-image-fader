@@ -40,7 +40,7 @@ widgets.Fader = function (config) {
             prevImageNo = this._callCounter - 1;
             oldImage = $('#image_' + prevImageNo);
 
-        $('<img src="' + this._directory + '/' + filename + '" id="image_' + this._callCounter + '" class="fadeImage" />')
+        $('<img src="' + this._directory + '/' + filename + '" id="image_' + this._callCounter + '" class="fadeImage"/>')
             .hide()
             .appendTo('#' + this._targetId)
             .fadeIn(600, function () {
@@ -58,10 +58,6 @@ widgets.Fader = function (config) {
                 self._fade();
             }, self._durationTime);
 
-        
-        // this._intervalId = window.setInterval(function () {
-        //     self._fade();
-        //     }, this._durationTime);
     }
     
     function stopFading() {
