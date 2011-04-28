@@ -1,29 +1,34 @@
 
 var widgets = widgets || {};
 
-widgets.Fader = function (config) {
-    if (!(this instanceof widgets.Fader)) {
-        return new widgets.Fader(config);
+widgets.fader = function (config) {
+    
+    var _intervalId,
+        _callCounter = 0,
+        _durationTime;
+    
+    function getSetTargetId() {
+        if (arguments.length > 0) {
+            config.targetId = config.targetId || "imagePlaceholder";
+        }
+        
+        return config.targetId;
     }
     
-    this._durationTime = config.duration * 1000;
-    this._fileNames = config.fileNames;
-    this._directory = config.directory;
-    this._targetId = config.targetId || "imagePlaceholder";
-    
-    this._intervalId;
-    this._callCounter = 0;
-    return this;
-};
-
-(function (p) {
-    
-    function getDurationTime() {
-        return this._durationTime / 1000;
+    function getSetDurationTime() {
+        if (arguments.length > 0) {
+            if (typeof arguments[0] !== 'number') {
+                throw new TypeError("durationTime should be a number");
+            }
+            _durationTime = arguments[0] * 1000;
+        }
+        
+        
+        return _durationTime / 1000;
     }
     
     function getFileNames() {
-        return this._fileNames;
+        return config.fileNames;
     }
     
     function getRandomPositionBetween(min, max) {
@@ -31,45 +36,52 @@ widgets.Fader = function (config) {
     }
     
     function getRandomFileName() {
-        var max = this._fileNames.length - 1;
-        return this._fileNames[getRandomPositionBetween(0, max)];
+        var max = config.fileNames.length - 1;
+        return config.fileNames[getRandomPositionBetween(0, max)];
     }
     
-    function _fade() {
-        var filename = this.getRandomFileName(),
-            prevImageNo = this._callCounter - 1;
+    function _fade(filename) {
+        var prevImageNo = _callCounter - 1;
             oldImage = $('#image_' + prevImageNo);
 
-        $('<img src="' + this._directory + '/' + filename + '" id="image_' + this._callCounter + '" class="fadeImage"/>')
+        $('<img src="' + config.directory + '/' + filename + '" id="image_' + _callCounter + '" class="fadeImage"/>')
             .hide()
-            .appendTo('#' + this._targetId)
+            .appendTo('#' + config.targetId)
             .fadeIn(600, function () {
                 oldImage.fadeOut('fast').remove();
             });
         
-        this._callCounter += 1;
+        _callCounter += 1;
     }
     
     function startFading() {
-        var self = this;
+        var self = this,
+            filename = self.getRandomFileName();
 
-        self._fade();
-        this._intervalId = window.setInterval(function () {
-                self._fade();
-            }, self._durationTime);
+        _fade(filename);
+        _intervalId = window.setInterval(function () {
+                filename = self.getRandomFileName();
+                _fade(filename);
+            }, _durationTime);
 
     }
     
     function stopFading() {
-        clearInterval(this._intervalId);
+        clearInterval(_intervalId);
     }
     
-    p.getDurationTime = getDurationTime;
-    p.getFileNames = getFileNames;
-    p.getRandomFileName = getRandomFileName;
-    p.getRandomPositionBetween = getRandomPositionBetween;
-    p._fade = _fade;
-    p.startFading = startFading;
-    p.stopFading = stopFading;
+    
+    getSetTargetId(config.targetId);
+    getSetDurationTime(config.duration);
+    
+    return {
+        targetId: getSetTargetId,
+        getSetDurationTime: getSetDurationTime,
+        getFileNames: getFileNames,
+        getRandomFileName: getRandomFileName,
+        getRandomPositionBetween: getRandomPositionBetween,
+        startFading: startFading,
+        stopFading: stopFading
+    };
 
-})(widgets.Fader.prototype);
+};

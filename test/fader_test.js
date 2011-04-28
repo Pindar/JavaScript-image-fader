@@ -3,18 +3,17 @@ TestCase("FaderTests", sinon.testCase({
 
         this.test = {};
         this.test.fileNames = ["file1.jpg", "file2.jpg", "file3.jpg", "file4.jpg", "file5.jpg"];
-        this.test.fader = new widgets.Fader({
+        this.test.fader = widgets.fader({
             fileNames: this.test.fileNames,
             directory: "/images",
             duration: 5
         });
         
         this.clock = sinon.useFakeTimers();
-        sinon.spy(this.test.fader, '_fade');
     },
     
     tearDown: function () {
-        this.test.fader._fade.restore();
+        
     },
     
     "test creats an fader object":
@@ -43,7 +42,7 @@ TestCase("FaderTests", sinon.testCase({
     
     "test duration time":
     function () {
-        assertEquals(5, this.test.fader.getDurationTime());
+        assertEquals(5, this.test.fader.getSetDurationTime());
     },
     
     "test file name list":
@@ -91,7 +90,7 @@ TestCase("FaderTests", sinon.testCase({
         var image;
         sinon.stub(this.test.fader, 'getRandomFileName').returns('file1.jpg');
         this.test.fader.startFading();
-        sinon.assert.calledOnce(this.test.fader._fade);
+
         image = document.getElementById('image_0');
         assertEquals('/images/file1.jpg', image.getAttribute('src'));
         
@@ -106,17 +105,17 @@ TestCase("FaderTests", sinon.testCase({
         var image;
         sinon.stub(this.test.fader, 'getRandomFileName').returns('file1.jpg');
         this.test.fader.startFading();
-        sinon.assert.calledOnce(this.test.fader._fade);
+
         image = document.getElementById('image_0');
         assertEquals('/images/file1.jpg', image.getAttribute('src'));
         
-        sinon.assert.calledOnce(this.test.fader._fade);
+
         this.test.fader.getRandomFileName.restore();
         sinon.stub(this.test.fader, 'getRandomFileName').returns('file2.jpg');
         this.clock.tick(5000);
         image = document.getElementById('image_1');
         assertEquals('/images/file2.jpg', image.getAttribute('src'));
-        sinon.assert.calledTwice(this.test.fader._fade);
+
                 
         this.test.fader.stopFading();
         this.test.fader.getRandomFileName.restore();
