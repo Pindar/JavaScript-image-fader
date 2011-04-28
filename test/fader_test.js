@@ -21,23 +21,14 @@ TestCase("FaderTests", sinon.testCase({
         assertObject(this.test.fader);
     },
     
-    // "test to compare object creation without new key word":
-    // function () {
-    //     assertEquals(this.test.fader, widgets.Fader({
-    //         fileNames: this.test.fileNames,
-    //         directory: "/images",
-    //         duration: 5
-    //     }));
-    // },
-    
     /*
         TODO 
         - setze Dauer √
         - set files' directory √
         - setze Dateiliste √
         - wähle zufällig aus liste √
-        - start fading
-        - cancle fading
+        - start fading √
+        - stop fading √
     */
     
     "test duration time":
