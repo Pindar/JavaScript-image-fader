@@ -1,4 +1,3 @@
-
 var widgets = widgets || {};
 
 widgets.fader = function (config) {
@@ -27,7 +26,6 @@ widgets.fader = function (config) {
             _durationTime = arguments[0] * 1000;
         }
         
-        
         return _durationTime / 1000;
     }
     
@@ -45,11 +43,15 @@ widgets.fader = function (config) {
     }
     
     function _getImageId(filename) {
-        return 'fade' + filename.substring(0,1).toUpperCase() + filename.substring(1).split('.')[0];
+        return 'fade' + filename.substring(0,1).toUpperCase() 
+            + filename.substring(1).split('.')[0];
     }
     
     function _addImage(filename) {
-        $('<img src="' + config.directory + '/' + filename + '" id="' + _getImageId(filename) + '" class="fadeImage" style="position: absolute; top: 0px; left: 0px;"/>')
+        $('<img src="' + config.directory + '/' + filename + '" \
+            id="' + _getImageId(filename) + '" \
+            class="fadeImage" \
+            style="position: absolute; top: 0px; left: 0px;"/>')
             .hide()
             .appendTo('#' + config.targetId);
     }
@@ -107,5 +109,4 @@ widgets.fader = function (config) {
         startFading: startFading,
         stopFading: stopFading
     };
-
 };

@@ -26,16 +26,6 @@ TestCase("FaderTests", sinon.testCase({
         assertException("Config file error", widgets.fader, new TypeError());
     },
     
-    /*
-        TODO 
-        - setze Dauer √
-        - set files' directory √
-        - setze Dateiliste √
-        - wähle zufällig aus liste √
-        - start fading √
-        - stop fading √
-    */
-    
     "test duration time":
     function () {
         assertEquals(5, this.test.fader.getSetDurationTime());
