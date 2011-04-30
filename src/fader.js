@@ -9,7 +9,7 @@ widgets.fader = function (config) {
     
     function getSetTargetId() {
         if (arguments.length > 0) {
-            config.targetId = config.targetId || "imagePlaceholder";
+            config.targetId = arguments[0] || "imagePlaceholder";
         }
         
         return config.targetId;
@@ -39,6 +39,27 @@ widgets.fader = function (config) {
         var max = config.fileNames.length - 1;
         return config.fileNames[getRandomPositionBetween(0, max)];
     }
+    
+    /*
+        TODO 
+        - improve the algorithm.
+
+        Add the images only one time to the dom tree:
+        1) calculate next image
+        2) check whether the image is still in the dom
+          a) yes: 
+            i) set timeout
+            ii) make it visible (fading)
+          b) no: 
+            i) add the next image to the dom (invisible)
+            ii) set timeout
+            iii) make it visible (fading) --> goto 1)
+            
+        Advantages: 
+          - lacy loading
+          - only one dom operation per image
+          - pre-loading next image while the current image is still visible
+    */
     
     function _fade(filename) {
         var prevImageNo = _callCounter - 1;

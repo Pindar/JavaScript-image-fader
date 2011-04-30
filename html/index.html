@@ -12,15 +12,15 @@
   </script>
   <script type="text/javascript">
     $(function () {
-        var fader = widgets.fader({
+        widgets.fader({
               fileNames: ["Airbag.jpg", "Aspirin.jpg", "Auto.jpg", "Buchdruck.jpg",
               "Computer.jpg", "Dieselmotor.jpg", "Fernsehen.jpg", "Gleitflugzeug.jpg",
               "Hubschrauber.jpg", "Plattenspieler.jpg", "Telefon.jpg"],
               directory: "images",
               duration: 5
-          });
+          })
+          .startFading();
           
-          fader.startFading();
     });
   </script>
 </body>
