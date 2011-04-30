@@ -4,8 +4,12 @@ var widgets = widgets || {};
 widgets.fader = function (config) {
     
     var _intervalId,
-        _callCounter = 0,
-        _durationTime;
+        _durationTime,
+        _filename;
+    
+    if (typeof config !== 'object' ) {
+        throw new TypeError("we need a config file.");
+    }
     
     function getSetTargetId() {
         if (arguments.length > 0) {
@@ -40,49 +44,48 @@ widgets.fader = function (config) {
         return config.fileNames[getRandomPositionBetween(0, max)];
     }
     
-    /*
-        TODO 
-        - improve the algorithm.
-
-        Add the images only one time to the dom tree:
-        1) calculate next image
-        2) check whether the image is still in the dom
-          a) yes: 
-            i) set timeout
-            ii) make it visible (fading)
-          b) no: 
-            i) add the next image to the dom (invisible)
-            ii) set timeout
-            iii) make it visible (fading) --> goto 1)
-            
-        Advantages: 
-          - lacy loading
-          - only one dom operation per image
-          - pre-loading next image while the current image is still visible
-    */
+    function _getImageId(filename) {
+        return 'fade' + filename.substring(0,1).toUpperCase() + filename.substring(1).split('.')[0];
+    }
     
-    function _fade(filename) {
-        var prevImageNo = _callCounter - 1;
-            oldImage = $('#image_' + prevImageNo);
-
-        $('<img src="' + config.directory + '/' + filename + '" id="image_' + _callCounter + '" class="fadeImage"/>')
+    function _addImage(filename) {
+        $('<img src="' + config.directory + '/' + filename + '" id="' + _getImageId(filename) + '" class="fadeImage" style="position: absolute; top: 0px; left: 0px;"/>')
             .hide()
-            .appendTo('#' + config.targetId)
-            .fadeIn(600, function () {
-                oldImage.fadeOut('fast').remove();
+            .appendTo('#' + config.targetId);
+    }
+    
+    function _isInDom(filename) {
+        return $('#' + _getImageId(_filename)).length > 0;
+    }
+    
+    function _checkAndInsert() {
+        _filename = this.getRandomFileName();
+        if (!_isInDom(_filename)) {
+            _addImage(_filename);
+        }
+    }
+    
+    function _fade() {
+        var oldImage = $('.fadeImage:visible'),
+            newImage = $('#' + _getImageId(_filename));
+
+        newImage.fadeIn(600, function () {
+                if (oldImage !== undefined
+                    && oldImage.attr('id') !== newImage.attr('id')) {
+                    oldImage.fadeOut('slow');
+                }
             });
-        
-        _callCounter += 1;
     }
     
     function startFading() {
-        var self = this,
-            filename = self.getRandomFileName();
-
-        _fade(filename);
+        var self = this;
+        
+        _checkAndInsert.call(self);
+        _fade();
+        
         _intervalId = window.setInterval(function () {
-                filename = self.getRandomFileName();
-                _fade(filename);
+                _checkAndInsert.call(self);
+                _fade();
             }, _durationTime);
 
     }

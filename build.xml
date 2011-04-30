@@ -25,15 +25,10 @@
 	<target name="dist" depends="compile" description="generate the distribution">
 		<mkdir dir="${dist}" />
 		<mkdir dir="${dist}/js" />
-		<mkdir dir="${dist}/css" />
 		
 		<copy file="${build}/${filename-min}" tofile="${dist}/js/${filename-min}" />
 		<copy file="${lib}/${jquery-filename}" tofile="${dist}/js/${jquery-filename}" />
 		
-		<copy todir="${dist}/css">
-		    <fileset dir="${build}" excludes="**/*.js" />
-		</copy>
-
 		<copy todir="${dist}/images">
 			<fileset dir="${html}/images" />
 		</copy>
@@ -57,9 +52,6 @@
 	<target name="minificationDist" depends="js.concatenateDist">
 		<java jar="tools/yuicompressor-2.4.2.jar" failonerror="true" fork="true" output="${build}/${filename-min}">
 			<arg value="${build}/concatenated.js" />
-		</java>
-		<java jar="tools/yuicompressor-2.4.2.jar" failonerror="true" fork="true" output="${build}/fader.css">
-			<arg value="${html}/css/fader.css" />
 		</java>
 	</target>
 </project>

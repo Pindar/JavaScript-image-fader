@@ -21,6 +21,11 @@ TestCase("FaderTests", sinon.testCase({
         assertObject(this.test.fader);
     },
     
+    "test error if config isn't defined":
+    function () {
+        assertException("Config file error", widgets.fader, new TypeError());
+    },
+    
     /*
         TODO 
         - setze Dauer √
@@ -82,7 +87,7 @@ TestCase("FaderTests", sinon.testCase({
         sinon.stub(this.test.fader, 'getRandomFileName').returns('file1.jpg');
         this.test.fader.startFading();
 
-        image = document.getElementById('image_0');
+        image = document.getElementById('fadeFile1');
         assertEquals('/images/file1.jpg', image.getAttribute('src'));
         
         this.test.fader.stopFading();
@@ -97,17 +102,34 @@ TestCase("FaderTests", sinon.testCase({
         sinon.stub(this.test.fader, 'getRandomFileName').returns('file1.jpg');
         this.test.fader.startFading();
 
-        image = document.getElementById('image_0');
+        image = document.getElementById('fadeFile1');
         assertEquals('/images/file1.jpg', image.getAttribute('src'));
         
 
         this.test.fader.getRandomFileName.restore();
         sinon.stub(this.test.fader, 'getRandomFileName').returns('file2.jpg');
         this.clock.tick(5000);
-        image = document.getElementById('image_1');
+        image = document.getElementById('fadeFile2');
         assertEquals('/images/file2.jpg', image.getAttribute('src'));
 
                 
+        this.test.fader.stopFading();
+        this.test.fader.getRandomFileName.restore();
+    },
+    
+    "test image doesn't change":
+    function () {
+        /*:DOC += <div id="imagePlaceholder"></div>*/
+        
+        var image;
+        sinon.stub(this.test.fader, 'getRandomFileName').returns('file1.jpg');
+        this.test.fader.startFading();
+
+        image = document.getElementById('fadeFile1');
+        this.clock.tick(5000);
+        image = document.getElementById('fadeFile1');
+        assertEquals('block', image.style.display);
+
         this.test.fader.stopFading();
         this.test.fader.getRandomFileName.restore();
     }
